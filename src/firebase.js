@@ -1,6 +1,6 @@
-import { initializeApp, auth } from 'firebase';
+import firebase from 'firebase';
 
-const firebaseConfig = initializeApp({
+const firebaseConfig = {
   apiKey: "AIzaSyBMnz1kGx8RT97Sggoqc_178veT0TQc3fo",
   authDomain: "clone-r-e6081.firebaseapp.com",
   databaseURL: "https://clone-r-e6081.firebaseio.com",
@@ -9,8 +9,11 @@ const firebaseConfig = initializeApp({
   messagingSenderId: "697129640780",
   appId: "1:697129640780:web:cba9dfad7b6140856ba5e9",
   measurementId: "G-7XS4EJ4R3C"
-})
+};
 
-const authorization = auth()
+const firebaseApp = firebase.initializeApp(firebaseConfig)
 
-export { authorization }
+const db = firebaseApp.firestore()   
+const authorization = firebase.auth()
+
+export { db, authorization }

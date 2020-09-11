@@ -7,6 +7,7 @@ import { useElements, useStripe, CardElement } from '@stripe/react-stripe-js';
 import { getBasketTotal } from './reducer';
 import CurrencyFormat from 'react-currency-format';
 import axios from './axios';
+import { db } from './firebase';
 
 function Payment() {
 
@@ -21,9 +22,9 @@ function Payment() {
   const [processing, setProcessing] = useState('');
 
   const [error, setError] = useState(null);
-  const [disabled, setDisabled] = useState();
+  const [disabled, setDisabled] = useState(true);
 
-  const [clientSecret, setClientSecret] = useState(true)
+  const [clientSecret, setClientSecret] = useState('')
 
   useEffect(() => {
     //generate the special stripe secret wich allows us to charge a customer
@@ -52,6 +53,18 @@ function Payment() {
     })
     .then(({paymentIntent}) => {
       //paymentIntent => payment confirmation
+
+      db
+        .collection('users')
+        .doc(user?.uid)
+        .collection('orders')
+        .doc(paymentIntent.id)
+        .set({
+          basket: basket,
+          amount: paymentIntent.amount,
+          created: paymentIntent.created
+        })
+
       setSucceeded(true)
       setError(null)
       setProcessing(false)
